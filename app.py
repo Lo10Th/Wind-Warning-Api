@@ -1,12 +1,9 @@
 from flask import Flask, jsonify, request
 import requests
 import os
-from dotenv import load_dotenv
 from datetime import datetime
 
 app = Flask(__name__)
-
-load_dotenv()
 
 @app.route('/')
 def index():
@@ -16,7 +13,9 @@ def index():
 def api():
     lat = 51.273310
     long = 7.115120
-    APIKEY = os.getenv('API_KEY')
+    APIKEY = os.environ.get('API_KEY')
+    if APIKEY is None:
+        raise Exception('API_KEY not found in environment variables. You have to add the Apikey from OpenWeatherMap to your environment variables.')
     weatherList = []
     
     url = f'https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={long}&exclude=minutely,daily,&appid={APIKEY}&units=metric'
